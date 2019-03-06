@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前一段时间在网上看到一篇文章，R爬虫小白入门：Rvest爬链家网+分析（一），考虑最近不少同学有租房需求，于是决定实践一下用R里面的rvest包爬一下某两中介的北京地区租房信息。 爬虫代码下面的代码仅供参考，第一次写写的很烂，特别是整理特殊字符过程。后来查询发现qdap包里面有strip函数类似于python里面的strip函数可以去掉多余特殊字符，大家可以试试。 必要的包1234librar">
+<meta name="keywords" content="R语言">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用R抓取北京中介房租信息并简单分析">
+<meta property="og:url" content="http://yoursite.com/2019/03/01/Rent-Inf/index.html">
+<meta property="og:site_name" content="Thunder Bear">
+<meta property="og:description" content="前一段时间在网上看到一篇文章，R爬虫小白入门：Rvest爬链家网+分析（一），考虑最近不少同学有租房需求，于是决定实践一下用R里面的rvest包爬一下某两中介的北京地区租房信息。 爬虫代码下面的代码仅供参考，第一次写写的很烂，特别是整理特殊字符过程。后来查询发现qdap包里面有strip函数类似于python里面的strip函数可以去掉多余特殊字符，大家可以试试。 必要的包1234librar">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/ThunderBearCN/Cloud/master/%E9%9B%B7%E7%86%8A-rentinf/col.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/ThunderBearCN/Cloud/master/%E9%9B%B7%E7%86%8A-rentinf/boxplot.png">
+<meta property="og:updated_time" content="2019-03-06T09:53:46.213Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用R抓取北京中介房租信息并简单分析">
+<meta name="twitter:description" content="前一段时间在网上看到一篇文章，R爬虫小白入门：Rvest爬链家网+分析（一），考虑最近不少同学有租房需求，于是决定实践一下用R里面的rvest包爬一下某两中介的北京地区租房信息。 爬虫代码下面的代码仅供参考，第一次写写的很烂，特别是整理特殊字符过程。后来查询发现qdap包里面有strip函数类似于python里面的strip函数可以去掉多余特殊字符，大家可以试试。 必要的包1234librar">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/ThunderBearCN/Cloud/master/%E9%9B%B7%E7%86%8A-rentinf/col.png">
+    
+    
+        
+          
+              <link rel="shortcut icon" href="/images/favicon.ico">
+          
+        
+        
+          
+            <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+          
+        
+        
+          
+            <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+          
+        
+    
+    <!-- title -->
+    <title>利用R抓取北京中介房租信息并简单分析</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- persian styles -->
+    
+      <link rel="stylesheet" href="/css/rtl.css">
+    
+    <!-- rss -->
+    
+    
+</head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="https://github.com/ThunderBearCN/ThunderBearCN.github.io">项目</a></li>
+        
+      </ul>
+    </span>
+    <br>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" href="/2019/02/24/hello-world/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">上一篇</span>
+      <span id="i-next" class="info" style="display:none;">下一篇</span>
+      <span id="i-top" class="info" style="display:none;">返回顶部</span>
+      <span id="i-share" class="info" style="display:none;">分享文章</span>
+    </span>
+    <br>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/03/01/Rent-Inf/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/03/01/Rent-Inf/&text=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/03/01/Rent-Inf/&is_video=false&description=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=利用R抓取北京中介房租信息并简单分析&body=Check out this article: http://yoursite.com/2019/03/01/Rent-Inf/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/03/01/Rent-Inf/&name=利用R抓取北京中介房租信息并简单分析&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#爬虫代码"><span class="toc-number">1.</span> <span class="toc-text">爬虫代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#必要的包"><span class="toc-number">1.1.</span> <span class="toc-text">必要的包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第一家"><span class="toc-number">1.2.</span> <span class="toc-text">第一家</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二家"><span class="toc-number">1.3.</span> <span class="toc-text">第二家</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据整理"><span class="toc-number">2.</span> <span class="toc-text">数据整理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据简单清洗和处理"><span class="toc-number">3.</span> <span class="toc-text">数据简单清洗和处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#针对区计算均价"><span class="toc-number">3.1.</span> <span class="toc-text">针对区计算均价</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#针对街区-地区计算均价"><span class="toc-number">3.2.</span> <span class="toc-text">针对街区\地区计算均价</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据展示"><span class="toc-number">4.</span> <span class="toc-text">数据展示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#柱状图"><span class="toc-number">4.1.</span> <span class="toc-text">柱状图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#箱图"><span class="toc-number">4.2.</span> <span class="toc-text">箱图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        利用R抓取北京中介房租信息并简单分析
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">Thunder Bear</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-03-01T13:56:19.000Z" itemprop="datePublished">2019-03-01</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link" href="/tags/R语言/">R语言</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <!--本文由雷熊原创，参考网上各种文章，请勿随意全文转载。-->
+<hr>
+<p>前一段时间在网上看到一篇文章，<a href="https://mp.weixin.qq.com/s?__biz=MzA3MTM3NTA5Ng==&amp;mid=2651060486&amp;idx=1&amp;sn=d8b5a0cd86a69c8f8d07a7b49037317d&amp;chksm=84d9d891b3ae5187aacd43198b343213d27c2346f4f49043011f722fc8022ca6ebd5de15b98b&amp;mpshare=1&amp;scene=1&amp;srcid=&amp;key=fd47cfb2e36ff95368a7eb2e0777675f0e20c4640c069cc18aca93bb368416ea31c6e832904cad0433ce08eb9b06ddf1af03e163abeb592094bc44f3112e1b9879151b4b076b7bcd1ec14bb74b424392&amp;ascene=1&amp;uin=MjgwMDc5ODE0Mg%3D%3D&amp;devicetype=Windows+10&amp;version=62060728&amp;lang=zh_CN&amp;pass_ticket=ncrwlW3VCru78X8T%2B3cTR2OZ1iYlAEazjr%2BspEUtpG3kNWQkg8GcK6NFZZDbtSyp" target="_blank" rel="noopener">R爬虫小白入门：Rvest爬链家网+分析（一）</a>，考虑最近不少同学有租房需求，于是决定实践一下用R里面的rvest包爬一下某两中介的北京地区租房信息。</p>
+<h2 id="爬虫代码"><a href="#爬虫代码" class="headerlink" title="爬虫代码"></a>爬虫代码</h2><p>下面的代码仅供参考，第一次写写的很烂，特别是整理特殊字符过程。后来查询发现qdap包里面有strip函数类似于python里面的strip函数可以去掉多余特殊字符，大家可以试试。</p>
+<h3 id="必要的包"><a href="#必要的包" class="headerlink" title="必要的包"></a>必要的包</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">library</span>(xml2)</span><br><span class="line"><span class="keyword">library</span>(rvest)<span class="comment">#重头戏</span></span><br><span class="line"><span class="keyword">library</span>(tidyverse)</span><br><span class="line"><span class="keyword">library</span>(stringr)</span><br></pre></td></tr></table></figure>
+<h3 id="第一家"><a href="#第一家" class="headerlink" title="第一家"></a>第一家</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">####LJ----</span></span><br><span class="line">i&lt;-<span class="number">1</span></span><br><span class="line">lj_inf &lt;- tibble()<span class="comment">#试用一下新推荐的tibble格式</span></span><br><span class="line"><span class="comment">#这里只抓到67页是因为发现67页后的数据大量重复，大家可以自己试试</span></span><br><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1</span>:<span class="number">67</span>)&#123;</span><br><span class="line">  web&lt;- read_html(paste(<span class="string">"https://bj.lianjia.com/zufang/pg"</span>,i,sep=<span class="string">""</span>),</span><br><span class="line">                  encoding=<span class="string">"UTF-8"</span>)</span><br><span class="line">  lj_tags &lt;- web %&gt;% </span><br><span class="line">    html_nodes(<span class="string">'p.content__list--item--des'</span>) %&gt;% </span><br><span class="line">    html_text()</span><br><span class="line">  <span class="comment">#下面把抓取的text做一下分列和处理</span></span><br><span class="line">  lj_tags &lt;- str_split_fixed(lj_tags,<span class="string">"/"</span>,<span class="number">5</span>)  </span><br><span class="line">  lj_tags &lt;- gsub(<span class="string">'\n'</span>,<span class="string">''</span>,lj_tags)</span><br><span class="line">  lj_tags &lt;- gsub(<span class="string">' '</span>,<span class="string">''</span>,lj_tags)</span><br><span class="line">  <span class="comment">#下面把location信息进行分列，方便后面提取</span></span><br><span class="line">  lj_loc &lt;- str_split_fixed(lj_tags[,<span class="number">1</span>],<span class="string">"-"</span>,<span class="number">2</span>)</span><br><span class="line">  lj_tp &lt;- web %&gt;% </span><br><span class="line">    html_nodes(<span class="string">'span.content__list--item-price'</span>) %&gt;% </span><br><span class="line">    html_text()</span><br><span class="line">  <span class="comment">#下面把租房的总价格和面积进行处理，计算单元租房价格（UnitPrice）</span></span><br><span class="line">  lj_tp &lt;- as.numeric(gsub(<span class="string">'元.*'</span>,<span class="string">''</span>,lj_tp))</span><br><span class="line">  lj_size &lt;- as.numeric(gsub(<span class="string">'㎡.*'</span>,<span class="string">''</span>,lj_tags[,<span class="number">2</span>]))</span><br><span class="line">  lj_up &lt;- lj_tp/lj_size</span><br><span class="line">  <span class="comment">#下面进行合并</span></span><br><span class="line">  lj &lt;- tibble(<span class="string">'Territory'</span>=lj_loc[,<span class="number">1</span>],</span><br><span class="line">               <span class="string">'Location'</span>=lj_loc[,<span class="number">2</span>],</span><br><span class="line">               <span class="string">'TotalPrice'</span>=lj_tp,<span class="string">'UnitPrice'</span>=lj_up,</span><br><span class="line">               <span class="string">'Type'</span>=lj_tags[,<span class="number">4</span>],<span class="string">'Area'</span>=lj_size)</span><br><span class="line">  lj_inf &lt;- rbind(lj_inf,lj)</span><br><span class="line">&#125;</span><br><span class="line">save(lj_inf,file = <span class="string">"lj_inf"</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="第二家"><a href="#第二家" class="headerlink" title="第二家"></a>第二家</h3><p>第二家抓取代码和第一家基本相同，就不再重复了，放在最后面。</p>
+<p>要注意AJK有一定的反爬措施，如果出现返回错误可能是ip被锁定，可以换一个ip试试，python爬虫的时候可以有header和cookie，爬的安全性要比R高很多。</p>
+<hr>
+<h2 id="数据整理"><a href="#数据整理" class="headerlink" title="数据整理"></a>数据整理</h2><p>主要是把两家的数据进行合并，注意二者每个数据的不同，需要统一</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#LJ的数据房型中有“卫”，AJK中没有，该步骤统一二者房型</span></span><br><span class="line">lj_inf1 &lt;- lj_inf</span><br><span class="line">lj_inf1[,<span class="number">5</span>] &lt;- gsub(<span class="string">'.卫'</span>,<span class="string">''</span>,lj_inf$Type)</span><br><span class="line">rent_inf &lt;- rbind(lj_inf1,ajk_inf)</span><br><span class="line">head(rent_inf)</span><br><span class="line">  Territory Location TotalPrice UnitPrice   Type Area</span><br><span class="line"><span class="number">1</span>      西城     月坛       <span class="number">7000</span>  <span class="number">98.59155</span> <span class="number">2</span>室<span class="number">1</span>厅   <span class="number">71</span></span><br><span class="line"><span class="number">2</span>      朝阳     燕莎      <span class="number">15000</span> <span class="number">168.53933</span> <span class="number">1</span>室<span class="number">0</span>厅   <span class="number">89</span></span><br><span class="line"><span class="number">3</span>      西城   广安门       <span class="number">4500</span> <span class="number">118.42105</span> <span class="number">1</span>室<span class="number">0</span>厅   <span class="number">38</span></span><br><span class="line"><span class="number">4</span>      丰台   玉泉营       <span class="number">5300</span> <span class="number">100.00000</span> <span class="number">1</span>室<span class="number">0</span>厅   <span class="number">53</span></span><br><span class="line"><span class="number">5</span>      海淀   小西天       <span class="number">7000</span> <span class="number">137.25490</span> <span class="number">2</span>室<span class="number">1</span>厅   <span class="number">51</span></span><br><span class="line"><span class="number">6</span>      西城     月坛      <span class="number">26000</span> <span class="number">181.81818</span> <span class="number">3</span>室<span class="number">1</span>厅  <span class="number">143</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="数据简单清洗和处理"><a href="#数据简单清洗和处理" class="headerlink" title="数据简单清洗和处理"></a>数据简单清洗和处理</h2><h3 id="针对区计算均价"><a href="#针对区计算均价" class="headerlink" title="针对区计算均价"></a>针对区计算均价</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#先去重，这里去重是简单去重，如果想要准确去重还是要人工去</span></span><br><span class="line">rent_inf &lt;- unique(rent_inf)</span><br><span class="line"><span class="comment">#去掉地区是北京周边的</span></span><br><span class="line">rent_inf &lt;- rent_inf[-(which(rent_inf$Territory==<span class="string">'北京周边'</span>)),]</span><br><span class="line"><span class="comment">#以Territory为分类做均值</span></span><br><span class="line">ter_mean &lt;- aggregate(cbind(rent_inf$TotalPrice,rent_inf$UnitPrice,rent_inf$Area),</span><br><span class="line">          list(rent_inf$Territory),mean)</span><br><span class="line">colnames(ter_mean) &lt;- c(<span class="string">'Territory'</span>,<span class="string">'TotalPrice'</span>,<span class="string">'UnitPrice'</span>,<span class="string">'Area'</span>)</span><br><span class="line">head(ter_mean)</span><br><span class="line">  Territory TotalPrice UnitPrice      Area</span><br><span class="line"><span class="number">1</span>      昌平   <span class="number">5623.601</span>  <span class="number">59.19156</span> <span class="number">103.53782</span></span><br><span class="line"><span class="number">2</span>      朝阳  <span class="number">13827.375</span> <span class="number">118.42935</span> <span class="number">116.84365</span></span><br><span class="line"><span class="number">3</span>      大兴   <span class="number">6191.161</span>  <span class="number">63.72042</span>  <span class="number">97.08333</span></span><br><span class="line"><span class="number">4</span>      东城  <span class="number">12815.198</span> <span class="number">138.02505</span>  <span class="number">88.75000</span></span><br><span class="line"><span class="number">5</span>      房山   <span class="number">3835.152</span>  <span class="number">45.91475</span>  <span class="number">85.12121</span></span><br><span class="line"><span class="number">6</span>      丰台   <span class="number">6832.329</span>  <span class="number">83.84923</span>  <span class="number">81.12766</span></span><br></pre></td></tr></table></figure>
+<h3 id="针对街区-地区计算均价"><a href="#针对街区-地区计算均价" class="headerlink" title="针对街区\地区计算均价"></a>针对街区\地区计算均价</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#清洗location列中同义地区，这一步只能人工判断，更多请见源代码</span></span><br><span class="line">rent_inf2 &lt;- rent_inf</span><br><span class="line">rent_inf2$Location &lt;- gsub(<span class="string">'朝阳公园.'</span>,<span class="string">'朝阳公园'</span>,rent_inf2$Location)</span><br><span class="line"><span class="comment">#对平谷做区域化处理，主要是因为平谷区数据不足</span></span><br><span class="line">rent_inf2$Location[which(rent_inf2$Territory==<span class="string">"平谷"</span>)] &lt;- <span class="string">'平谷'</span></span><br><span class="line"><span class="comment">#去掉location数量小于10的行，数据太少的地区计算均值容易受极值波动影响没有代表性</span></span><br><span class="line">loc_num &lt;- as.data.frame(sort(table(rent_inf2$Location)))</span><br><span class="line">loc_del &lt;- as.character(loc_num[loc_num$Freq&lt;<span class="number">10</span>,<span class="number">1</span>])</span><br><span class="line">rent_inf2 &lt;- rent_inf2[!(rent_inf2$Location %<span class="keyword">in</span>% loc_del),]</span><br><span class="line">loc_mean &lt;- aggregate(cbind(rent_inf2$TotalPrice,rent_inf2$UnitPrice,rent_inf2$Area),</span><br><span class="line">                      list(rent_inf2$Territory,rent_inf2$Location),mean)</span><br><span class="line">colnames(loc_mean) &lt;- c(<span class="string">'Territory'</span>,<span class="string">'Location'</span>,<span class="string">'TotalPrice'</span>,<span class="string">'UnitPrice'</span>,<span class="string">'Area'</span>)</span><br><span class="line">head(loc_mean)<span class="comment">#这里数据太多，就放出前几行</span></span><br><span class="line">  Territory     Location TotalPrice UnitPrice      Area</span><br><span class="line"><span class="number">1</span>      朝阳          CBD  <span class="number">13540.000</span> <span class="number">154.77944</span>  <span class="number">88.65000</span></span><br><span class="line"><span class="number">2</span>      东城       安定门   <span class="number">9520.000</span> <span class="number">124.52977</span>  <span class="number">78.80000</span></span><br><span class="line"><span class="number">3</span>      海淀       安宁庄  <span class="number">15383.700</span>  <span class="number">93.17206</span> <span class="number">156.00000</span></span><br><span class="line"><span class="number">4</span>      朝阳         安贞   <span class="number">9169.565</span> <span class="number">128.77457</span>  <span class="number">72.65217</span></span><br><span class="line"><span class="number">5</span>      东城         安贞   <span class="number">7166.667</span> <span class="number">137.47772</span>  <span class="number">53.33333</span></span><br><span class="line"><span class="number">6</span>      朝阳 奥林匹克公园  <span class="number">12051.515</span> <span class="number">103.44656</span> <span class="number">115.96970</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="数据展示"><a href="#数据展示" class="headerlink" title="数据展示"></a>数据展示</h2><h3 id="柱状图"><a href="#柱状图" class="headerlink" title="柱状图"></a>柱状图</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">png(<span class="string">"col.png"</span>,width=<span class="number">3000</span>,height=<span class="number">2000</span>,res=<span class="number">300</span>)</span><br><span class="line">ggplot(data = ter_mean,</span><br><span class="line">       aes(x=reorder(ter_mean$Territory,ter_mean$UnitPrice),<span class="comment">#定义x轴排序</span></span><br><span class="line">           y=ter_mean$UnitPrice))+</span><br><span class="line">  geom_col(fill= <span class="string">"pink"</span>)+<span class="comment">#定义柱子颜色</span></span><br><span class="line">  theme(legend.position = <span class="string">'none'</span>,</span><br><span class="line">        axis.text.x = element_text(family = <span class="string">'myFont'</span>,size = <span class="number">10</span>,face = <span class="string">'bold'</span>,</span><br><span class="line">                                   angle = <span class="number">45</span>,vjust = <span class="number">1</span>,hjust = <span class="number">1</span>),</span><br><span class="line">        axis.title = element_text(family = <span class="string">'myFont'</span>,size = <span class="number">14</span>,face = <span class="string">'bold'</span>),</span><br><span class="line">        axis.text.y = element_text(size = <span class="number">10</span>,face = <span class="string">'bold'</span>),</span><br><span class="line">        panel.grid.major.x=element_blank())+<span class="comment">#调整文本等</span></span><br><span class="line">  scale_y_continuous(breaks=seq(<span class="number">0</span>,<span class="number">150</span>,<span class="number">25</span>))+<span class="comment">#调整y轴密度和范围</span></span><br><span class="line">  geom_text(aes(label = round(UnitPrice,digits = <span class="number">1</span>)),size=<span class="number">3</span>)+</span><br><span class="line">  labs(x=<span class="string">'Territory'</span>,y=<span class="string">'Unit Price'</span>,</span><br><span class="line">       title = <span class="string">'Average unit price for rental house in BJ'</span>)</span><br><span class="line">dev.off()</span><br></pre></td></tr></table></figure>
+<p>效果如下</p>
+<p><img src="https://raw.githubusercontent.com/ThunderBearCN/Cloud/master/%E9%9B%B7%E7%86%8A-rentinf/col.png" alt></p>
+<h3 id="箱图"><a href="#箱图" class="headerlink" title="箱图"></a>箱图</h3><p>源代码和柱状图大同小异，这里就不放出来了。</p>
+<p>效果如下</p>
+<p><img src="https://raw.githubusercontent.com/ThunderBearCN/Cloud/master/%E9%9B%B7%E7%86%8A-rentinf/boxplot.png" alt></p>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>其实这次爬虫就是依照了前人的代码思路，自己选了两个网站抓取，过程中还遇到了不少bug，其实都是自己技术太差，所以写R一定要多实践，多给自己找事情写代码，为了写代码而奋斗！</p>
+<p>针对数据没有做一些统计学的检验，也没有对离群值的处理（从箱图可以明显看出有不少离群值），只算了均值和画了两个图，可以说是非常粗糙的，源代码和获得的数据放在下面，大家有兴趣可以自己处理一下，欢迎和我交流！</p>
+<p>经过进一步的学习发现，R的循环语句效率的确不高，而且用于爬虫功能还是非常简单原始，如果要真正做爬虫还是推荐大家使用无所不能的python。</p>
+<p>代码和数据：<a href="https://github.com/ThunderBearCN/Cloud" target="_blank" rel="noopener">https://github.com/ThunderBearCN/Cloud</a></p>
+<hr>
+<p>欢迎大家在评论区提出批评和意见，也可以给我发邮件:)</p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>加载评论需要在浏览器启用 JavaScript 脚本支持。</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="https://github.com/ThunderBearCN/ThunderBearCN.github.io">项目</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#爬虫代码"><span class="toc-number">1.</span> <span class="toc-text">爬虫代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#必要的包"><span class="toc-number">1.1.</span> <span class="toc-text">必要的包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第一家"><span class="toc-number">1.2.</span> <span class="toc-text">第一家</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二家"><span class="toc-number">1.3.</span> <span class="toc-text">第二家</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据整理"><span class="toc-number">2.</span> <span class="toc-text">数据整理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据简单清洗和处理"><span class="toc-number">3.</span> <span class="toc-text">数据简单清洗和处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#针对区计算均价"><span class="toc-number">3.1.</span> <span class="toc-text">针对区计算均价</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#针对街区-地区计算均价"><span class="toc-number">3.2.</span> <span class="toc-text">针对街区\地区计算均价</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据展示"><span class="toc-number">4.</span> <span class="toc-text">数据展示</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#柱状图"><span class="toc-number">4.1.</span> <span class="toc-text">柱状图</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#箱图"><span class="toc-number">4.2.</span> <span class="toc-text">箱图</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/03/01/Rent-Inf/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/03/01/Rent-Inf/&text=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/03/01/Rent-Inf/&is_video=false&description=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=利用R抓取北京中介房租信息并简单分析&body=Check out this article: http://yoursite.com/2019/03/01/Rent-Inf/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/03/01/Rent-Inf/&name=利用R抓取北京中介房租信息并简单分析&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> 菜单</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> 目录</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> 分享</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> 返回顶部</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy; 2019 Baird Lee
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+         
+          <li><a href="/">首页</a></li>
+         
+          <li><a href="/about/">关于</a></li>
+         
+          <li><a href="/archives/">归档</a></li>
+         
+          <li><a href="https://github.com/ThunderBearCN/ThunderBearCN.github.io">项目</a></li>
+        
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link rel="stylesheet" href="/lib/justified-gallery/css/justifiedGallery.min.css">
+
+    <!-- jquery -->
+<script src="/lib/jquery/jquery.min.js"></script>
+<script src="/lib/justified-gallery/js/jquery.justifiedGallery.min.js"></script>
+<script src="/js/main.js"></script>
+<!-- search -->
+
+<!-- Google Analytics -->
+
+    <script type="text/javascript">
+        (function(i,s,o,g,r,a,m) {i['GoogleAnalyticsObject']=r;i[r]=i[r]||function() {
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+        ga('create', 'UA-135229087-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+
+<!-- Baidu Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'thunderbear';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+
+</body>
+</html>
