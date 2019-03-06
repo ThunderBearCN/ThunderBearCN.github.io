@@ -10,7 +10,7 @@
 <meta name="keywords" content="R语言">
 <meta property="og:type" content="article">
 <meta property="og:title" content="利用R抓取北京中介房租信息并简单分析">
-<meta property="og:url" content="http://yoursite.com/2019/03/01/Rent-Inf/index.html">
+<meta property="og:url" content="https://thunderbearcn.github.io/2019/03/01/Rent-Inf/index.html">
 <meta property="og:site_name" content="Thunder Bear">
 <meta property="og:description" content="前一段时间在网上看到一篇文章，R爬虫小白入门：Rvest爬链家网+分析（一），考虑最近不少同学有租房需求，于是决定实践一下用R里面的rvest包爬一下某两中介的北京地区租房信息。 爬虫代码下面的代码仅供参考，第一次写写的很烂，特别是整理特殊字符过程。后来查询发现qdap包里面有strip函数类似于python里面的strip函数可以去掉多余特殊字符，大家可以试试。 必要的包1234librar">
 <meta property="og:locale" content="zh-CN">
@@ -90,16 +90,16 @@
     <br>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/03/01/Rent-Inf/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/03/01/Rent-Inf/&text=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/03/01/Rent-Inf/&is_video=false&description=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=利用R抓取北京中介房租信息并简单分析&body=Check out this article: http://yoursite.com/2019/03/01/Rent-Inf/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/03/01/Rent-Inf/&name=利用R抓取北京中介房租信息并简单分析&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&text=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&is_video=false&description=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=利用R抓取北京中介房租信息并简单分析&body=Check out this article: https://thunderbearcn.github.io/2019/03/01/Rent-Inf/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&name=利用R抓取北京中介房租信息并简单分析&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -212,16 +212,16 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=http://yoursite.com/2019/03/01/Rent-Inf/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://twitter.com/share?url=http://yoursite.com/2019/03/01/Rent-Inf/&text=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=http://yoursite.com/2019/03/01/Rent-Inf/&is_video=false&description=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=利用R抓取北京中介房租信息并简单分析&body=Check out this article: http://yoursite.com/2019/03/01/Rent-Inf/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="https://getpocket.com/save?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://reddit.com/submit?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://digg.com/submit?url=http://yoursite.com/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="http://www.tumblr.com/share/link?url=http://yoursite.com/2019/03/01/Rent-Inf/&name=利用R抓取北京中介房租信息并简单分析&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.facebook.com/sharer.php?u=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://twitter.com/share?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&text=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.linkedin.com/shareArticle?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://pinterest.com/pin/create/bookmarklet/?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&is_video=false&description=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=利用R抓取北京中介房租信息并简单分析&body=Check out this article: https://thunderbearcn.github.io/2019/03/01/Rent-Inf/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="https://getpocket.com/save?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://reddit.com/submit?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.stumbleupon.com/submit?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://digg.com/submit?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&title=利用R抓取北京中介房租信息并简单分析"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="http://www.tumblr.com/share/link?url=https://thunderbearcn.github.io/2019/03/01/Rent-Inf/&name=利用R抓取北京中介房租信息并简单分析&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
